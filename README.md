@@ -25,75 +25,25 @@ This deployment provides an API only and does not include the WebUI's user inter
 6. You can now deploy your model in [Banana Deploy](https://app.banana.dev/deploy). Select `Deploy from Github` and choose your repo.
 
 ## Inference
+
 After the `Status` field in your model page turns to `Deployed`, you can send requests to perform inference.
 
-### txt2img example
+```python
+import banana_dev as banana
 
-```
-{
-  "endpoint": "txt2img",
-  "params": {
-    "prompt": "an astronaut riding a (horse:motorcycle:0.5) on the moon",
-    "negative_prompt": "cartoonish, low quality",
-    "steps": 25,
-    "sampler_name": "Euler a",
-    "cfg_scale": 7.5,
-    "seed": 42,
-    "batch_size": 1,
-    "n_iter": 1,
-    "width": 768,
-    "height": 768,
-    "tiling": false
-    
-  }
-}
+api_key = "YOUR_API_KEY_HERE"
+model_key = "YOUR_MODEL_KEY"
+model_inputs = {'endpoint': 'txt2img', 'params': {'prompt': 'RAW photo, a close up portrait photo of 26 y.o woman in wastelander clothes, long haircut, pale skin, slim body, background is city ruins, (high detailed skin:1.2), 8k uhd, dslr, soft lighting, high quality, film grain, Fujifilm XT3', 'negative_prompt': '(deformed iris, deformed pupils, semi-realistic, cgi, 3d, render, sketch, cartoon, drawing, anime:1.4), text, close up, cropped, out of frame, worst quality, low quality, jpeg artifacts, ugly, duplicate, morbid, mutilated, extra fingers, mutated hands, poorly drawn hands, poorly drawn face, mutation, deformed, blurry, dehydrated, bad anatomy, bad proportions, extra limbs, cloned face, disfigured, gross proportions, malformed limbs, missing arms, missing legs, extra arms, extra legs, fused fingers, too many fingers, long neck', 'steps': 25, 'sampler_name': 'Euler a', 'cfg_scale': 7.5, 'seed': 42, 'batch_size': 1, 'n_iter': 1, 'width': 768, 'height': 768, 'tiling': False}}
+
+out = banana.run(api_key, model_key, model_inputs)
 ```
 
-(Only `prompt` is required.)
+You should be able to save the generated image by:
+```python
+import base64
+import io
+from PIL import Image
 
-Output:
-
-```
-{
-  "images": [
-    "<base64 image>"
-  ]
-}
-```
-
-### img2img example
-
-```
-{
-  "endpoint": "img2img",
-  "params": {
-    "prompt": "an astronaut riding a horse on the moon in anime style",
-    "negative_prompt": "cartoonish, low quality",
-    "steps": 25,
-    "sampler_name": "Euler a",
-    "cfg_scale": 7.5,
-    "denoising_strength": 0.7,
-    "seed": 42,
-    "batch_size": 1,
-    "n_iter": 1,
-    "width": 768,
-    "height": 768,
-    "tiling": false
-    "init_images": [
-        "<base64 image>"
-    ]
-  }
-}
-```
-
-(Only `prompt` and `init_images` are required.)
-
-Output:
-
-```
-{
-  "images": [
-    "<base64 image>"
-  ]
-}
+base64img = out['modelOutputs'][0]['images'][0]
+Image.open(io.BytesIO(base64.b64decode(base64img.split(",",1)[0]))).save('output1.png')
 ```
