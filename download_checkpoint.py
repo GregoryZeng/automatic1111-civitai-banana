@@ -2,6 +2,7 @@ import os
 import requests
 import sys
 import time
+import re
 from tqdm import tqdm
 
 MODEL_URL = os.environ.get('MODEL_URL')
@@ -12,8 +13,16 @@ CHUNK_SIZE = 1024 * 1024
 def get_filename(model_url, id="model"):
     if '.safetensors' in model_url:
         return 'models/Stable-diffusion/' + id + '.safetensors'
-    else:
+    elif '.ckpt' in model_url:
         return 'models/Stable-diffusion/' + id + '.ckpt'
+    elif 'civitai.com' in model_url:
+        # accepts url like `https://civitai.com/api/download/models/29460`
+        response = requests.get(model_url, stream=True)
+        fileformat = re.search('filename="(.+)"', response.headers['Content-Disposition']).group(1).split('.')[-1]
+        response.close()
+        return 'models/Stable-diffusion/' + id + '.' + fileformat
+    else:
+        raise Exception("model_url must be a .safetensors/.ckpt file or from civitai")
 
 def check_model_file(filename):
     file_size_mb = round(os.path.getsize(filename) / (1024 * 1024))

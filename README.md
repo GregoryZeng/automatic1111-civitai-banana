@@ -1,23 +1,31 @@
 
-# 🍌 Stable Diffusion WebUI for banana (Stable Diffusion 2.1)
+# Deploy any Civitai model as API in 🍌Banana
 
-Deploy an API for AUTOMATIC1111's [Stable Diffusion WebUI](https://github.com/AUTOMATIC1111/stable-diffusion-webui) to generate images with **Stable Diffusion 2.1**.
+Deploy an API for AUTOMATIC1111's [Stable Diffusion WebUI](https://github.com/AUTOMATIC1111/stable-diffusion-webui) to generate images with any model from [Civitai](https://civitai.com/).
+[Banana](https://www.banana.dev/) is a serverless GPU platform.
 
-Supports features not available in other Stable Diffusion templates, such as:
-
-* [Prompt emphasis](https://github.com/AUTOMATIC1111/stable-diffusion-webui/wiki/Features#attentionemphasis)
-* [Prompt editing](https://github.com/AUTOMATIC1111/stable-diffusion-webui/wiki/Features#prompt-editing)
-* [Unlimited prompt length](https://github.com/AUTOMATIC1111/stable-diffusion-webui/wiki/Features#infinite-prompt-length)
+Currently supported Civitai model types:
+- [x] Checkpoint
+- [ ] TextualInversion
+- [ ] Hypernetwork
+- [ ] AestheticGradient
+- [ ] LORA
+- [ ] Controlnet
+- [ ] Poses
 
 This deployment provides an API only and does not include the WebUI's user interface. Please report any issues you encounter.
 
-<a href="https://www.buymeacoffee.com/cogentdev" target="_blank"><img src="https://cdn.buymeacoffee.com/buttons/v2/default-blue.png" alt="Buy Me A Coffee" style="height: 40px !important;width: 145px !important;" ></a>
 
-## Instant Deploy
+## Deploy a model
+1. Clone this repo.
+2. Find the civitai you would like to deploy. [Take this model as an example](https://civitai.com/models/4201/realistic-vision-v20).
+3. Right click the `Download Latest` (or `Download` button for previous versions) and select `Copy Link Address`. Now you get a URL like `https://civitai.com/api/download/models/[NUMBER]` in your clipboard.
+4. Edit the `Dockerfile` and substitue the original string after `ARG MODEL_URL=` with the civitai model URL.
+5. Commit and git push the changes to your personal repo.
+6. You can now deploy your model in [Banana Deploy](https://app.banana.dev/deploy). Select `Deploy from Github` and choose your repo.
 
-[See how to deploy in seconds](https://app.banana.dev/templates/patienceai/automatic1111-sd-2-1-banana).
-
-## Model Inputs
+## Inference
+After the `Status` field in your model page turns to `Deployed`, you can send requests to perform inference.
 
 ### txt2img example
 
